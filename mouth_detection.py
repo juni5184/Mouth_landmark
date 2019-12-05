@@ -1,5 +1,5 @@
 # USAGE
-# python face_parts_detection.py -p "shape_predictor_68_face_landmarks.dat" -i "images/example_01.jpg"
+# python mouth_detection.py -p "shape_predictor_68_face_landmarks.dat" -i "images/example_01.jpg"
 
 # import the necessary packages
 from imutils import face_utils
@@ -43,14 +43,10 @@ for rect in rects:
 	# faceOrig = imutils.resize(image[y:y + h, x:x + w], width=256)
 	faceAligned = fa.align(image, gray, rect)
 
-	# import uuid
-	# f = str(uuid.uuid4())
-	# cv2.imwrite("foo/" + f + ".png", faceAligned)
-
 	# display the output images
 	# cv2.imshow("Original", faceOrig)
-	cv2.imshow("Aligned", faceAligned)
-	cv2.waitKey(0)
+	# cv2.imshow("Aligned", faceAligned)
+	# cv2.waitKey(0)
 
 
 # load the input image, resize it, and convert it to grayscale
@@ -68,30 +64,35 @@ for (i, rect) in enumerate(rects):
 	shape = face_utils.shape_to_np(shape)
 
 	# loop over the face parts individually
+	# 얼굴 부위를 각각 반복
 	for (name, (i, j)) in face_utils.FACIAL_LANDMARKS_IDXS.items():
-		# clone the original image so we can draw on it, then
-		# display the name of the face part on the image
-		clone = image.copy()
-		cv2.putText(clone, name, (10, 30), cv2.FONT_HERSHEY_SIMPLEX,
-			0.7, (0, 0, 255), 2)
+		print(str(face_utils.FACIAL_LANDMARKS_IDXS.items()))
+		if(name=="mouth" or name=="inner_mouth") :
+			# clone the original image so we can draw on it, then
+			# display the name of the face part on the image
+			clone = image.copy()
+			cv2.putText(clone, name, (10, 30), cv2.FONT_HERSHEY_SIMPLEX,
+				0.7, (0, 0, 255), 2)
 
-		# loop over the subset of facial landmarks, drawing the
-		# specific face part
-		for (x, y) in shape[i:j]:
-			cv2.circle(clone, (x, y), 1, (0, 0, 255), -1)
+			print(str(name)+", "+str(i)+", "+str(j))
 
-		# extract the ROI of the face region as a separate image
-		(x, y, w, h) = cv2.boundingRect(np.array([shape[i:j]]))
-		roi = image[y:y + h, x:x + w]
-		roi = imutils.resize(roi, width=256, inter=cv2.INTER_CUBIC)
+			# loop over the subset of facial landmarks, drawing the
+			# specific face part
+			for (x, y) in shape[i:j]:
+				cv2.circle(clone, (x, y), 1, (0, 0, 255), -1)
 
-		# show the particular face part
-		# ROI 는 잘린 이미지를 보여줌
-		# Image는 전체 사진에서 점 찍어서 보여줌
-		cv2.imshow("ROI", roi)
-		cv2.imshow("Image", clone)
-		cv2.imshow("Aligned", faceAligned)
-		cv2.waitKey(0)
+			# extract the ROI of the face region as a separate image
+			(x, y, w, h) = cv2.boundingRect(np.array([shape[i:j]]))
+			roi = image[y:y + h, x:x + w]
+			roi = imutils.resize(roi, width=256, inter=cv2.INTER_CUBIC)
+
+			# show the particular face part
+			# ROI 는 잘린 이미지를 보여줌
+			# Image는 전체 사진에서 점 찍어서 보여줌
+			cv2.imshow("ROI", roi)
+			#cv2.imshow("Image", clone)
+			#cv2.imshow("Aligned", faceAligned)
+			cv2.waitKey(0)
 
 	# visualize all facial landmarks with a transparent overlay
 	output = face_utils.visualize_facial_landmarks(image, shape)
