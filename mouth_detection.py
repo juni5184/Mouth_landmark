@@ -58,15 +58,17 @@ rects = detector(gray, 1)
 # ===========================image align===============================
 # loop over the face detections
 for (i, rect) in enumerate(rects):
-	# determine the facial landmarks for the face region, then
-	# convert the landmark (x, y)-coordinates to a NumPy array
+	# 얼굴 영역의 얼굴 랜드 마크를 결정한 다음 랜드 마크 (x, y) 좌표를 NumPy 배열로 변환
+	print(str(i),str(rect))
 	shape = predictor(gray, rect)
 	shape = face_utils.shape_to_np(shape)
+
+	print(str(shape))
 
 	# loop over the face parts individually
 	# 얼굴 부위를 각각 반복
 	for (name, (i, j)) in face_utils.FACIAL_LANDMARKS_IDXS.items():
-		print(str(face_utils.FACIAL_LANDMARKS_IDXS.items()))
+		#print(str(face_utils.FACIAL_LANDMARKS_IDXS.items()))
 		if(name=="mouth" or name=="inner_mouth") :
 			# clone the original image so we can draw on it, then
 			# display the name of the face part on the image
@@ -76,8 +78,7 @@ for (i, rect) in enumerate(rects):
 
 			print(str(name)+", "+str(i)+", "+str(j))
 
-			# loop over the subset of facial landmarks, drawing the
-			# specific face part
+			# loop over the subset of facial landmarks, drawing the specific face part
 			for (x, y) in shape[i:j]:
 				cv2.circle(clone, (x, y), 1, (0, 0, 255), -1)
 

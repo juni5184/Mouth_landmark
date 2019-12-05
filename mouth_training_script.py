@@ -85,7 +85,6 @@ def measure_model_error(model, xml_annotations):
 # add or remove models here.
 models = [
      # pair: model name, parts
-    ("eye_eyebrows_22", EYE_EYEBROWS),
     ("nose_mouth_30", NOSE_MOUTH),
     ("face_contour_17", FACE_CONTOUR),
     ("face_landmarks_68", ALL_LANDMARKS)
