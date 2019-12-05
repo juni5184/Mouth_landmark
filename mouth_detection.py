@@ -63,13 +63,13 @@ for (i, rect) in enumerate(rects):
 	shape = predictor(gray, rect)
 	shape = face_utils.shape_to_np(shape)
 
-	print(str(shape))
+	#print(str(shape))
 
 	# loop over the face parts individually
 	# 얼굴 부위를 각각 반복
 	for (name, (i, j)) in face_utils.FACIAL_LANDMARKS_IDXS.items():
 		#print(str(face_utils.FACIAL_LANDMARKS_IDXS.items()))
-		if(name=="mouth" or name=="inner_mouth") :
+		#if(name=="mouth" or name=="inner_mouth") :
 			# clone the original image so we can draw on it, then
 			# display the name of the face part on the image
 			clone = image.copy()
@@ -91,7 +91,7 @@ for (i, rect) in enumerate(rects):
 			# ROI 는 잘린 이미지를 보여줌
 			# Image는 전체 사진에서 점 찍어서 보여줌
 			cv2.imshow("ROI", roi)
-			#cv2.imshow("Image", clone)
+			cv2.imshow("Image", clone)
 			#cv2.imshow("Aligned", faceAligned)
 			cv2.waitKey(0)
 
