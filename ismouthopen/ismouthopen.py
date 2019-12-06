@@ -8,6 +8,8 @@ import numpy as np
 import imutils
 import argparse
 
+# 윗입술, 아랫입술 각각 위아래 길이 재는 코드
+# euclidean 거리를 이용함
 def mouth_aspect_ratio(image, mouth):
 
     top_mouth = dist.euclidean(mouth[3], mouth[14])
@@ -21,7 +23,8 @@ def mouth_aspect_ratio(image, mouth):
 
 # 이미지에서 입벌린걸 찾는 함수
 def find_and_mark_face_parts_on_images(images):
-
+    print(images+"\images")
+    image_dir= images+"\images"
     # 68 landmark 모델 이용해서 landmark detect
     shape_predictor_path = "shape_predictor_68_face_landmarks.dat"
     detector = dlib.get_frontal_face_detector()
@@ -33,11 +36,12 @@ def find_and_mark_face_parts_on_images(images):
         return
 
     # dir 에 들어있는 이미지 불러오기
-    for img in os.listdir(images):
+    for img in os.listdir(image_dir):
+        print(img)
         # png 나 jpg 로 끝나는 파일이면 if 문에 들어감
         if img.endswith(".png") or img.endswith(".jpg"):
             # 이미지 이름 추출
-            image_path = os.path.join(images,img)
+            image_path = os.path.join(image_dir,img)
             #print(str(image_path))
 
             # 이미지 읽기, resize
@@ -56,14 +60,18 @@ def find_and_mark_face_parts_on_images(images):
                 # 코 맨 위 점부터 턱 끝 점까지 선 긋기
                 #cv2.line(image, tuple(shape[8]), tuple(shape[27]), (0, 255, 0), 3)
 
+
+                # 왜인지는 모르겠는데 name이 계속 mouth 만 나온다
                 for (name, (index, j)) in face_utils.FACIAL_LANDMARKS_IDXS.items():
-                    #print(str((index, j)))
+                    # 여기에서 name을 출력해봐도 계속 mouth만 출력됨
+                    # 왜지???
                     if name == "mouth":
 
-                        # extract the ROI of the face region as a separate image
+                        # 입 부분 추출해서 잘라내는 코드
                         (x, y, w, h) = cv2.boundingRect(np.array([shape[index:j]]))
                         roi = image[y:y + h, x:x + w]
                         roi = imutils.resize(roi, width=256, inter=cv2.INTER_CUBIC)
+
 
                         ans = mouth_aspect_ratio(image, shape[index:j])
                         if(round(float(face_distance))/round(float(ans[1]))>10) :
