@@ -60,7 +60,6 @@ def find_and_mark_face_parts_on_images(images):
                 # 코 맨 위 점부터 턱 끝 점까지 선 긋기
                 #cv2.line(image, tuple(shape[8]), tuple(shape[27]), (0, 255, 0), 3)
 
-
                 # 왜인지는 모르겠는데 name이 계속 mouth 만 나온다
                 for (name, (index, j)) in face_utils.FACIAL_LANDMARKS_IDXS.items():
                     # 여기에서 name을 출력해봐도 계속 mouth만 출력됨
@@ -72,23 +71,26 @@ def find_and_mark_face_parts_on_images(images):
                         roi = image[y:y + h, x:x + w]
                         roi = imutils.resize(roi, width=256, inter=cv2.INTER_CUBIC)
 
-
+                        # mouth landmark의 euclidean 거리 측정
                         ans = mouth_aspect_ratio(image, shape[index:j])
-                        if(round(float(face_distance))/round(float(ans[1]))>10) :
-                            print("top mouth weird / ", round(float(face_distance))/round(float(ans[1])))
-                        else :
-                            print("top mouth ok / ", round(float(face_distance)) / round(float(ans[1])))
 
-                        if (round(float(face_distance)) / round(float(ans[2])) > 15):
-                            print("bottom mouth weird / ", round(float(face_distance)) / round(float(ans[2])))
-                        else:
-                            print("bottom mouth ok / ", round(float(face_distance)) / round(float(ans[2])))
+                        # 분모가 둘다 0이 아니라면
+                        if (round(float(ans[1])) !=0 and round(float(ans[2]))!= 0) :
+                            if(round(float(face_distance))/round(float(ans[1]))>10) :
+                                print("top mouth weird / ", round(float(face_distance))/round(float(ans[1])))
+                            else :
+                                print("top mouth ok / ", round(float(face_distance)) / round(float(ans[1])))
+
+                            if (round(float(face_distance)) / round(float(ans[2])) > 15):
+                                print("bottom mouth weird / ", round(float(face_distance)) / round(float(ans[2])))
+                            else:
+                                print("bottom mouth ok / ", round(float(face_distance)) / round(float(ans[2])))
 
 
                         # 입 부분 blur 검사
                         fm= cv2.Laplacian(roi, cv2.CV_64F).var()
                         text = "Not Blurry"
-                        if fm < 5:
+                        if fm < 4:
                              text = "Blurry"
 
                         cv2.putText(image, "{}: {:.2f}".format(text, fm), (10, 30),
